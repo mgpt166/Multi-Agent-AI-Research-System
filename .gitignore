@@ -1,0 +1,76 @@
+# ── Environment & Secrets ─────────────────────────────────────────────────────
+.env
+.env.*
+*.env
+secrets.json
+
+# ── Python ────────────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+.eggs/
+*.so
+*.whl
+pip-log.txt
+
+# ── Virtual Environment ───────────────────────────────────────────────────────
+venv/
+.venv/
+env/
+ENV/
+
+# ── IDE & Editor ──────────────────────────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
+*.sublime-project
+*.sublime-workspace
+
+# ── Database & Persistent Data ────────────────────────────────────────────────
+data/
+*.db
+*.sqlite
+*.sqlite3
+
+# ── Research Outputs & Reports ────────────────────────────────────────────────
+output/
+reports/
+*.report.json
+*.report.md
+
+# ── Eval Results ──────────────────────────────────────────────────────────────
+evals/results/
+
+# ── Logs ──────────────────────────────────────────────────────────────────────
+*.log
+logs/
+*.log.*
+
+# ── Testing & Coverage ────────────────────────────────────────────────────────
+.pytest_cache/
+.coverage
+coverage.xml
+htmlcov/
+.tox/
+.mypy_cache/
+
+# ── Jupyter ───────────────────────────────────────────────────────────────────
+.ipynb_checkpoints/
+*.ipynb
+
+# ── Planning & Temp Files ─────────────────────────────────────────────────────
+plan.json
+*.tmp
+*.temp
+*.bak
+
+# ── OS ────────────────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+desktop.ini
