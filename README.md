@@ -101,7 +101,7 @@ POST /research
 |-----------|-----------|------|
 | Workflow orchestration | **LangGraph** `StateGraph` | HITL interrupt, state checkpointing, conditional routing |
 | LeadResearcher + CitationAgent | **Groq** `llama-3.3-70b-versatile` | Planning, synthesis, self-review, citation |
-| ResearchSubAgents | **Groq** `llama-3.1-8b-instant` | Web search agentic loop (5× higher daily quota) |
+| ResearchSubAgents | **Groq** `llama-3.3-70b-versatile` | Web search agentic loop |
 | Web search | **Tavily** (swappable) | AI-optimised search, clean LLM-ready content |
 | API layer | **FastAPI** + BackgroundTasks | Non-blocking job dispatch, Pydantic validation |
 | HITL state | **LangGraph MemorySaver** | Graph state persisted across interrupt/resume |
@@ -245,7 +245,7 @@ ANTHROPIC_API_KEY=sk-ant-...    # Only needed for evals
 
 # ── LLM Models (configurable, no code changes needed) ───────────────
 GROQ_MODEL=llama-3.3-70b-versatile       # LeadResearcher + CitationAgent
-GROQ_SUB_AGENT_MODEL=llama-3.1-8b-instant # ResearchSubAgents (5× higher daily limit)
+GROQ_SUB_AGENT_MODEL=llama-3.3-70b-versatile # ResearchSubAgents
 GROQ_CALL_INTERVAL=3                      # Seconds between Groq calls (set 0 on paid tier)
 
 # ── Pipeline Limits ─────────────────────────────────────────────────
@@ -350,7 +350,7 @@ curl -o report.docx http://localhost:8000/download/abc-123
 |----------|---------|-------------|
 | `GROQ_API_KEY` | — | **Required.** Groq API key |
 | `GROQ_MODEL` | `llama-3.3-70b-versatile` | Model for LeadResearcher + CitationAgent |
-| `GROQ_SUB_AGENT_MODEL` | `llama-3.1-8b-instant` | Model for ResearchSubAgents |
+| `GROQ_SUB_AGENT_MODEL` | `llama-3.3-70b-versatile` | Model for ResearchSubAgents |
 | `GROQ_CALL_INTERVAL` | `3` | Min seconds between Groq calls. Set `0` on paid tier |
 | `TAVILY_API_KEY` | — | **Required.** Tavily search key |
 | `ANTHROPIC_API_KEY` | — | Required for evals only |
@@ -372,7 +372,7 @@ curl -o report.docx http://localhost:8000/download/abc-123
 | `moderate` | 2 | ~40,000 | ~$0.003 | 3–5 min |
 | `deep` | 3 | ~80,000 | ~$0.006 | 6–10 min |
 
-> Costs based on `llama-3.1-8b-instant` Groq pricing. Switching to `llama-3.3-70b-versatile` for sub-agents is ~10× more expensive but still significantly cheaper than most hosted APIs.
+> Costs based on `llama-3.3-70b-versatile` Groq pricing.
 
 ---
 
@@ -419,8 +419,6 @@ Results saved to `evals/results/{run_id}/` — also visible in the **Eval Histor
 | Model | TPM | Daily Limit | Used for |
 |-------|-----|-------------|---------|
 | `llama-3.3-70b-versatile` | 6,000 | 100k tokens/day | LeadResearcher, CitationAgent |
-| `llama-3.1-8b-instant` | 6,000 | 500k tokens/day | ResearchSubAgents |
-
 The `groq_retry.py` wrapper handles 429 errors automatically with exponential backoff (10s → 20s → 40s → 80s → 160s, max 5 retries). Set `GROQ_CALL_INTERVAL=3` (default) to throttle calls and stay well under the 6k TPM limit.
 
 ---

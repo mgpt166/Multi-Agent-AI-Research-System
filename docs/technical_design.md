@@ -51,9 +51,7 @@
 | Model | Model ID | Used by | Why |
 |-------|----------|---------|-----|
 | Llama 3.3 70B Versatile | `llama-3.3-70b-versatile` | LeadResearcher, CitationAgent | Best reasoning available on Groq free tier. Used for planning, synthesis, self-review, and citation. |
-| Llama 3.1 8B Instant | `llama-3.1-8b-instant` | ResearchSubAgent | High-speed, high-throughput model. 5× higher daily token limit (500k TPD vs 100k TPD for 70b) — essential for parallel sub-agent execution on the free tier. |
-
-> **Decision Log**: Models are configurable via `GROQ_MODEL` and `GROQ_SUB_AGENT_MODEL` env vars. The split exists because the Groq free tier enforces daily token limits per model — using the fast 8b model for sub-agents (which make the most calls) preserves the 70b quota for quality-critical orchestrator steps.
+> **Decision Log**: All agents use `llama-3.3-70b-versatile`. The 8b model was tested for sub-agents but caused hallucinated URLs and fabricated sources. Both models are configurable via `GROQ_MODEL` and `GROQ_SUB_AGENT_MODEL` env vars.
 
 ### Supporting Libraries
 
@@ -143,7 +141,7 @@ Multi-Agent-AI-Research-System/
     ├── agents/
     │   ├── __init__.py
     │   ├── lead_researcher.py       # Opus: plan / evaluate / synthesize / review
-    │   ├── sub_agent.py             # Sonnet: web search agentic loop
+    │   ├── sub_agent.py             # 70b: web search agentic loop
     │   ├── citation_agent.py        # [CITE: url] → [N] + bibliography
     │   └── document_generator.py   # python-docx .docx report writer
     │
@@ -932,9 +930,9 @@ _PROVIDERS = {
 
 | Variable | Default | Required | Description |
 |----------|---------|----------|-------------|
-| `GROQ_API_KEY` | — | **Yes** | Groq API key. Required for all LLM calls. Free tier: 6,000 TPM, 100k TPD (70b) / 500k TPD (8b). |
-| `GROQ_MODEL` | `llama-3.3-70b-versatile` | No | Model for LeadResearcher and CitationAgent. Higher quality, lower daily limit. |
-| `GROQ_SUB_AGENT_MODEL` | `llama-3.1-8b-instant` | No | Model for ResearchSubAgent. Faster, 5× higher daily token limit — essential for free tier. |
+| `GROQ_API_KEY` | — | **Yes** | Groq API key. Required for all LLM calls. Free tier: 6,000 TPM, 100k TPD. |
+| `GROQ_MODEL` | `llama-3.3-70b-versatile` | No | Model for LeadResearcher and CitationAgent. |
+| `GROQ_SUB_AGENT_MODEL` | `llama-3.3-70b-versatile` | No | Model for ResearchSubAgent. Same as lead — required for reliable tool use. |
 | `GROQ_CALL_INTERVAL` | `3` | No | Minimum seconds between consecutive Groq calls. Set to `0` on a paid tier. Prevents 429s. |
 | `TAVILY_API_KEY` | — | **Yes** | Tavily search API key. Used by `TavilySearchProvider`. Free tier: 1000 searches/month. |
 | `OUTPUT_DIR` | `./output` | No | Directory where `.docx` reports are saved. Created on startup if missing. |

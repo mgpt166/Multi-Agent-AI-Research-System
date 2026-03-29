@@ -138,7 +138,7 @@ The LeadResearcher is the strategic center of the system. It is the only agent w
 
 **Model**: `llama-3.3-70b-versatile` via Groq (configurable via `GROQ_MODEL` env var) — highest quality model available on the Groq free tier, appropriate for strategic reasoning, synthesis, and judgment calls.
 
-> **Decision Log**: The LeadResearcher uses the larger 70b model because orchestration quality is the primary bottleneck. Poor task decomposition and weak synthesis are the most common failure modes. Sub-agents are more mechanical (search → extract → summarise) and can run effectively on the faster, higher-throughput 8b model — which also has a 5× higher daily token limit on the Groq free tier (500k vs 100k TPD), making it essential for parallel sub-agent execution.
+> **Decision Log**: All agents use the 70b model. Orchestration quality is the primary bottleneck — poor task decomposition and weak synthesis are the most common failure modes. The 8b model was tested for sub-agents but caused hallucinated URLs and fabricated sources, so 70b is used across the board for reliability.
 
 ---
 
@@ -199,7 +199,7 @@ Each ResearchSubAgent is a focused, independent research unit. It receives a sin
 - Do not attempt to synthesize across sub-topics — that is the LeadResearcher's job
 - Report facts with their source attribution inline; do not paraphrase away citation information
 
-**Model**: `llama-3.1-8b-instant` via Groq (configurable via `GROQ_SUB_AGENT_MODEL` env var) — sufficient for focused search-and-extract tasks, and has a 5× higher daily token limit than the 70b model on the Groq free tier.
+**Model**: `llama-3.3-70b-versatile` via Groq (configurable via `GROQ_SUB_AGENT_MODEL` env var) — required for reliable tool use and accurate search query generation.
 
 ---
 
